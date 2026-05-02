@@ -1,0 +1,16 @@
+# Ignore all executable files
+*.exe
+*.out
+*.app
+
+# Ignore object files and libraries
+*.o
+*.obj
+*.a
+*.lib
+
+# Ignore IDE specific folders (optional)
+.vscode/
+.idea/
+bin/
+out/
