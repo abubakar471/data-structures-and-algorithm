@@ -51,6 +51,26 @@ public:
     A = newA;   // Point to new array
   }
 
+  /*
+  Summary: Reduces the capacity of the array when usage drops
+  below a certain threshold to save memory.
+  */
+  void shrink() {
+    // Only shrink if we are using 1/4 or less of the capacity
+    // and the capacity is reasonably large (e.g., > 4)
+    if (originalSize > 0 && originalSize <= totalSize / 4 && totalSize > 4) {
+      totalSize /= 2;
+      int *newA = new int[totalSize];
+
+      for (int i = 0; i < originalSize; i++) {
+        newA[i] = A[i];
+      }
+
+      delete[] A;
+      A = newA;
+    }
+  }
+
   void insert(int index, int x) {
     if (originalSize == totalSize) {
       grow();
@@ -67,27 +87,27 @@ public:
   }
 
   void remove(int index) {
-    int x = -1;
+      if (index >= 0 && index < originalSize) {
+          for (int i = index; i < originalSize - 1; i++) {
+              A[i] = A[i + 1];
+          }
+          originalSize--;
 
-    if (index >= 0 && index < originalSize) {
-      for (int i = index; i < originalSize - 1; i++) {
-        A[i] = A[i + 1];
+          // Check if we should reclaim memory
+          shrink();
+      } else {
+          cerr << "OUT_OF_BOUNDS" << endl;
       }
-
-      originalSize--;
-    } else{
-        cerr << "OUT_OF_BOUNDS" << endl;
-    }
   }
 
   int search(int needle) {
-      for(int i=0; i < originalSize; i++){
-          if(A[i] == needle){
-              return i;
-          }
+    for (int i = 0; i < originalSize; i++) {
+      if (A[i] == needle) {
+        return i;
       }
+    }
 
-      return -1;
+    return -1;
   }
 };
 
